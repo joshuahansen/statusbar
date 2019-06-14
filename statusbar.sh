@@ -10,7 +10,7 @@ function status() {
     
     echo $delim
 
-    amixer get Master | awk -F'[][]' 'END{ print $2 }'
+    amixer -M get Master | awk -F'[][]' 'END{ print $2 }'
 
     echo $delim
 
