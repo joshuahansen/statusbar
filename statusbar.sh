@@ -62,7 +62,21 @@ function wifi() {
     echo  "$RED$ip$NC"
 }
 
+function weather() {
+    d=$(head -n 1 wttr.txt)
+    if [ "$d" != $(date "+%d/%m/%Y") ]; then
+        date "+%d/%m/%Y" > wttr.txt
+        curl wttr.in/Melbourne?format=%t%w >> wttr.txt
+    fi
+    echo "$(head -n 2 wttr.txt | grep C | sed -e 's/C/C /g')"
+}
+
 function status() {
+
+    echo $DELIM
+
+    weather
+
     echo $DELIM
 
     wifi
