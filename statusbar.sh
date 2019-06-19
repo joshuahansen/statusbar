@@ -1,22 +1,34 @@
 #!/bin/bash
 
 # Red colour
-RED='\033[0;31m'
+RED="^c#FF0000^"
+# Green colour
+GREEN="^00FF00^"
 # No Colour
-NC='\033[0m'
+NC="^d^"
 # Delimiter
 DELIM=" | "
+
+LOW_BAT=false
 
 function battery() {
     bat=$(< /sys/class/power_supply/BAT1/capacity)
     
     if (($bat < 25)); then
+        if (( $bat <= 10 )) && [ "$LOW_BAT" = false ]; then
+            LOW_BAT=true
+            notify-send -u critical "Low Battery" "Battery is $bat% plug into charger"
+        fi
+        LOW_BAT=false
         echo "$bat%" # $(~/suckless-builds/d-icons/battery-0.svg)"
     elif (($bat < 50)); then
+        LOW_BAT=false
         echo "$bat%" # $(~/suckless-builds/d-icons/battery-1.svg)"
     elif (($bat < 75)); then
+        LOW_BAT=false
         echo "$bat%" # $(~/suckless-builds/d-icons/battery-2.svg)"
     else
+        LOW_BAT=false
         echo "$bat%" # $(~/suckless-builds/d-icons/battery-3.svg)"
     fi
 }
@@ -47,7 +59,7 @@ function wifi() {
         fi
     fi
     ip=$(wget http://ipecho.net/plain -O - -q)
-    echo -e "$ip"
+    echo  "$RED$ip$NC"
 }
 
 function status() {
